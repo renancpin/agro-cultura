@@ -1,0 +1,13 @@
+services:
+  app:
+    build:
+      target: development
+    develop:
+      watch:
+        - action: sync
+          path: ./src
+          target: /app/src
+          ignore:
+            - node_modules/
+        - action: rebuild
+          path: package.json

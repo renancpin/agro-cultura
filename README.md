@@ -1,98 +1,168 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Agro Cultura
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Sistema de cadastro e gerenciamento de produtores, fazendas e culturas agrícolas.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Descrição
 
-## Description
+Esta aplicação é um sistema backend desenvolvido com NestJS que permite o gerenciamento de produtores rurais, suas fazendas e culturas agrícolas. O sistema oferece uma API RESTful completa com autenticação e documentação OpenAPI.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Pré-requisitos
 
-## Project setup
+- Node.js (versão 18 ou superior)
+- Yarn (gerenciador de pacotes)
+- PostgreSQL (banco de dados)
+
+## Instalação
+
+1. Clone o repositório:
 
 ```bash
-$ yarn install
+git clone [URL_DO_REPOSITÓRIO]
+cd agro-cultura
 ```
 
-## Compile and run the project
+2. Instale as dependências:
 
 ```bash
-# development
-$ yarn run start
-
-# watch mode
-$ yarn run start:dev
-
-# production mode
-$ yarn run start:prod
+yarn install
 ```
 
-## Run tests
+3. Configure as variáveis de ambiente:
+   Crie um arquivo `.env` na raiz do projeto com as seguintes variáveis:
+
+```env
+# Banco de Dados
+DB_HOST=localhost
+DB_PORT=5432
+DB_USERNAME=postgres
+DB_PASSWORD=postgres
+DB_DATABASE=postgres
+
+# Ambiente
+NODE_ENV=development
+PORT=3000
+
+# Autenticação
+JWT_SECRET=mysecret
+JWT_EXPIRATION=3600s
+```
+
+## Executando a aplicação
+
+Lembre-se de executar as migrações quando necessário:
 
 ```bash
-# unit tests
-$ yarn run test
-
-# e2e tests
-$ yarn run test:e2e
-
-# test coverage
-$ yarn run test:cov
+yarn typeorm:migrate
 ```
-
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
 
 ```bash
-$ yarn install -g @nestjs/mau
-$ mau deploy
+# Modo desenvolvimento
+yarn start:dev
+
+# Modo produção
+yarn build
+yarn start:prod
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+A aplicação estará disponível em `http://localhost:3000` (ou na porta especificada no arquivo .env).
 
-## Resources
+## **Docker**
 
-Check out a few resources that may come in handy when working with NestJS:
+Para executar a aplicação em Docker, execute:
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+```bash
+yarn docker:up
+# Se desejar repetir o processo forçando o build, use a flag --build:
 
-## Support
+yarn docker:up --build
+```
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+Se desejar remover os containers e imagens:
 
-## Stay in touch
+```bash
+yarn docker:down
+```
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+### Desenvolvendo em container
 
-## License
+É possível utilizar-se das ferramentas mais atuais de desenvolvimento,
+e executar a aplicação diretamente em container, atualizando-se a cada edição no código-fonte
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+Para isso, use o script abaixo
+
+```bash
+# Iniciar containers em modo "watch"
+yarn docker:up:dev
+
+# Se já existir uma imagem anterior, use a flag --build
+yarn docker:up:dev --build
+
+# Parar e remover os containers
+yarn docker:down:dev
+```
+
+## Documentação da API
+
+Ao executar a aplicação, uma documentação em formato OpenAPI é gerada automaticamente.
+
+A documentação da API está disponível através do Swagger UI:
+
+- Interface Swagger: `http://localhost:3000/openapi`
+- Especificação OpenAPI em JSON: `http://localhost:3000/openapi-json`
+- Especificação OpenAPI em YAML: `http://localhost:3000/openapi-yaml`
+
+## Testes
+
+```bash
+# Testes unitários
+yarn test
+
+# Testes unitários com watch mode
+yarn test:watch
+
+# Testes com cobertura
+yarn test:cov
+
+# Testes end-to-end
+yarn test:e2e
+```
+
+## Estrutura Básicas do Projeto
+
+Cada módulo da aplicação contém os dtos, serviços e controllers. Esta estrutura ajuda a separar as responsabilidades e modularizar as partes da aplicação para melhor manutenção
+
+```
+src/
+├── config/         # Configurações da aplicação
+├── modules/        # Módulos da aplicação
+│   ├── auth/       # Autenticação
+│   ├── users/      # Usuários
+│   ├── produtores/ # Produtores
+│   ├── fazendas/   # Fazendas
+│   └── culturas/   # Culturas
+├── shared/         # Recursos compartilhados
+└── main.ts         # Ponto de entrada da aplicação
+```
+
+## **Exemplo Prático**
+
+Uma versão desta aplicação está hospedada no link **https://agro-cultura.onrender.com**
+
+Uma documentação interativa pode ser encontrada em [/openapi](https://agro-cultura.onrender.com/openapi).
+
+- Documentação OpenAPI em formato [**.json**](https://agro-cultura.onrender.com/openapi-json)
+- Documentação OpenAPI em formato [**.yaml**](https://agro-cultura.onrender.com/openapi-yaml),
+
+## Tecnologias Utilizadas
+
+- TypeScript - Linguagem de programação
+- NestJS - Framework Node.js
+- TypeORM - ORM para PostgreSQL
+- Passport - Autenticação
+- JWT - Tokens de autenticação
+- Swagger/OpenAPI - Documentação da API
+- Jest - Testes
+
+## Licença
+
+Este projeto está licenciado sob a licença GPL-3.0.
