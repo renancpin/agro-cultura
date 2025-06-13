@@ -6,6 +6,8 @@ describe('AppController', () => {
   let appController: AppController;
 
   beforeEach(async () => {
+    jest.clearAllMocks();
+
     const app: TestingModule = await Test.createTestingModule({
       controllers: [AppController],
       providers: [AppService],
