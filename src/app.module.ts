@@ -8,6 +8,9 @@ import { UserModule } from './modules/user/user.module';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { AppService } from './app.service';
 import { AppController } from './app.controller';
+import { ProdutorModule } from './modules/produtor/produtor.module';
+import { FazendaModule } from './modules/fazenda/fazenda.module';
+import { CulturaModule } from './modules/cultura/cultura.module';
 
 @Module({
   imports: [
@@ -23,6 +26,9 @@ import { AppController } from './app.controller';
     }),
     AuthModule,
     UserModule,
+    ProdutorModule,
+    FazendaModule,
+    CulturaModule,
   ],
   controllers: [AppController],
   providers: [
