@@ -35,4 +35,4 @@ COPY --from=builder /app/dist ./dist
 EXPOSE 3000
 
 # Start the application
-CMD yarn typeorm:migrate; yarn start:prod
+CMD yarn typeorm:migrate:prod; yarn start:prod
