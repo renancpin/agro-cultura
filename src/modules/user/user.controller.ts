@@ -7,21 +7,25 @@ import {
   Delete,
   NotFoundException,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { ApiExcludeController } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiExcludeController } from '@nestjs/swagger';
+import { FindUsersDto } from './dto/find-users.dto';
 
 @ApiExcludeController()
+@ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
 @Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Get()
-  findAll() {
-    return this.userService.findAll();
+  async findAll(@Query() findUsersDto: FindUsersDto) {
+    const results = await this.userService.findAll(findUsersDto);
+    return results;
   }
 
   @Get(':id')
