@@ -4,6 +4,8 @@ import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
+import { FindUsersDto } from './dto/find-users.dto';
+import { PaginatedUsers } from './dto/paginated-users.dto';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
@@ -38,10 +40,18 @@ export class UserService {
     return user;
   }
 
-  findAll() {
-    const users = this.usersRepository.find();
+  async findAll(props: FindUsersDto): Promise<PaginatedUsers> {
+    const query = props.toQuery();
+    const [users, total] = await this.usersRepository.findAndCount(query);
 
-    return users;
+    const userResult = new PaginatedUsers({
+      data: users,
+      page: props.page,
+      results: props.results,
+      totalResults: total,
+    });
+
+    return userResult;
   }
 
   async findByUsername(username: string): Promise<User | null> {
