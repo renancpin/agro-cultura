@@ -17,7 +17,7 @@ Esta aplicação é um sistema backend desenvolvido com NestJS que permite o ger
 1. Clone o repositório:
 
 ```bash
-git clone [URL_DO_REPOSITÓRIO]
+git clone https://github.com/renancpin/agro-cultura
 cd agro-cultura
 ```
 
@@ -68,12 +68,12 @@ A aplicação estará disponível em `http://localhost:3000` (ou na porta especi
 
 ## **Docker**
 
-Para executar a aplicação em Docker, execute:
+Para rodar a aplicação em Docker, execute:
 
 ```bash
 yarn docker:up
-# Se desejar repetir o processo forçando o build, use a flag --build:
 
+# Se desejar repetir o processo forçando o build:
 yarn docker:up --build
 ```
 
@@ -130,10 +130,10 @@ src/
 
 Uma versão desta aplicação está hospedada no link **https://agro-cultura.onrender.com**
 
-Uma documentação interativa pode ser encontrada em [/openapi](https://agro-cultura.onrender.com/openapi).
+Uma documentação interativa em formato OpenAPI/Swagger pode ser encontrada em [/openapi](https://agro-cultura.onrender.com/openapi).
 
 - Documentação OpenAPI em formato [**.json**](https://agro-cultura.onrender.com/openapi-json)
-- Documentação OpenAPI em formato [**.yaml**](https://agro-cultura.onrender.com/openapi-yaml),
+- Documentação OpenAPI em formato [**.yaml**](https://agro-cultura.onrender.com/openapi-yaml)
 
 ## Tecnologias Utilizadas
 
@@ -147,4 +147,4 @@ Uma documentação interativa pode ser encontrada em [/openapi](https://agro-cul
 
 ## Licença
 
-Este projeto está licenciado sob a licença GPL-3.0.
+Este projeto está licenciado sob a licença [GPL-3.0](https://www.gnu.org/licenses/gpl-3.0.html).
