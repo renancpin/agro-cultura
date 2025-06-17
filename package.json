@@ -22,7 +22,9 @@
     "typeorm:migrate": "yarn typeorm migration:run",
     "typeorm:migrate:prod": "npx typeorm -d ./dist/config/typeorm.config.js migration:run",
     "docker:up": "docker compose up",
-    "docker:down": "docker compose down"
+    "docker:down": "docker compose down",
+    "docker:up:dev": "docker compose -f docker-compose.yml -f compose-dev.yml watch",
+    "docker:down:dev": "docker compose -f docker-compose.yml -f compose-dev.yml down"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",

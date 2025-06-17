@@ -1,5 +1,5 @@
 # Build stage
-FROM node:22-alpine AS builder
+FROM node:22-alpine AS install
 
 WORKDIR /app
 
@@ -14,7 +14,14 @@ RUN yarn install
 COPY . .
 
 # Build the application
+FROM install AS builder
+
 RUN yarn build
+
+# Development stage
+FROM install AS development
+
+CMD yarn typeorm:migrate; yarn start:dev
 
 # Production stage
 FROM node:22-alpine AS production

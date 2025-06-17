@@ -83,6 +83,24 @@ Se desejar remover os containers e imagens:
 yarn docker:down
 ```
 
+### Desenvolvendo em container
+
+É possível utilizar-se das ferramentas mais atuais de desenvolvimento,
+e executar a aplicação diretamente em container, atualizando-se a cada edição no código-fonte
+
+Para isso, use o script abaixo
+
+```bash
+# Iniciar containers em modo "watch"
+yarn docker:up:dev
+
+# Se já existir uma imagem anterior, use a flag --build
+yarn docker:up:dev --build
+
+# Parar e remover os containers
+yarn docker:down:dev
+```
+
 ## Documentação da API
 
 Ao executar a aplicação, uma documentação em formato OpenAPI é gerada automaticamente.
