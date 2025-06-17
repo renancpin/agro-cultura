@@ -1,4 +1,3 @@
-import { Exclude, Transform } from 'class-transformer';
 import { Produtor } from '../../produtor/entities/produtor.entity';
 import {
   Column,
@@ -7,8 +6,8 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { pickProperties } from 'src/shared/transformers/pick-properties.transformer';
 import { DecimalType } from 'src/shared/helpers/column-definition.function';
+import { Exclude } from 'class-transformer';
 
 @Entity()
 export class Fazenda {
@@ -33,10 +32,6 @@ export class Fazenda {
   @Column(DecimalType({ name: 'area_vegetacao_hectares' }))
   areaVegetacaoHectares: number;
 
-  @Transform(
-    (props: { value: Fazenda }) =>
-      props.value && pickProperties(props.value, 'id', 'nome'),
-  )
   @ManyToOne(() => Produtor, { nullable: false })
   @JoinColumn({ name: 'produtor_id' })
   produtor: Produtor;

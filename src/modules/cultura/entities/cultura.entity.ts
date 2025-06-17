@@ -1,6 +1,4 @@
-import { Exclude, Transform } from 'class-transformer';
 import { Fazenda } from '../../fazenda/entities/fazenda.entity';
-import { pickProperties } from 'src/shared/transformers/pick-properties.transformer';
 import {
   Column,
   Entity,
@@ -30,15 +28,10 @@ export class Cultura {
   @Column({ name: 'data_colheita', type: 'date', nullable: true })
   dataColheita: Date | null;
 
-  @Transform(
-    (props: { value: Fazenda }) =>
-      props.value && pickProperties(props.value, 'id', 'nome'),
-  )
   @ManyToOne(() => Fazenda, { nullable: false })
   @JoinColumn({ name: 'fazenda_id' })
   fazenda: Fazenda;
 
-  @Exclude()
   @Column({ name: 'fazenda_id' })
   fazendaId: string;
 }

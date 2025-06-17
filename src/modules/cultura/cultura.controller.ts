@@ -9,12 +9,20 @@ import {
   UnprocessableEntityException,
   NotFoundException,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { CulturaService } from './cultura.service';
 import { CreateCulturaDto } from './dto/create-cultura.dto';
 import { UpdateCulturaDto } from './dto/update-cultura.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiUnprocessableEntityResponse,
+} from '@nestjs/swagger';
+import { FindCulturasDto } from './dto/find-culturas.dto';
 
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
@@ -22,6 +30,16 @@ import { ApiBearerAuth } from '@nestjs/swagger';
 export class CulturaController {
   constructor(private readonly culturaService: CulturaService) {}
 
+  @ApiOperation({
+    summary: 'Criar cultura',
+    description: `
+Informe o tipo de cultura, a área cultivada e o ano da safra.
+
+A soma das áreas das culturas de uma mesma fazenda e safra deve ser menor ou igual à área agricultável da fazenda`,
+  })
+  @ApiUnprocessableEntityResponse({
+    description: 'Fazenda não encontrada ou sem área agricultável disponível',
+  })
   @Post()
   async create(@Body() createCulturaDto: CreateCulturaDto) {
     try {
@@ -34,11 +52,15 @@ export class CulturaController {
     }
   }
 
+  @ApiOperation({ summary: 'Ver todas as culturas' })
   @Get()
-  findAll() {
-    return this.culturaService.findAll();
+  async findAll(@Query() findCulturasDto: FindCulturasDto) {
+    const culturas = await this.culturaService.findAll(findCulturasDto);
+    return culturas;
   }
 
+  @ApiOperation({ summary: 'Buscar cultura por id' })
+  @ApiNotFoundResponse({ description: 'Cultura não encontrada' })
   @Get(':id')
   async findOne(@Param('id') id: string) {
     const result = await this.culturaService.findOne(id);
@@ -47,6 +69,9 @@ export class CulturaController {
     return result;
   }
 
+  @ApiOperation({ summary: 'Atualizar cultura' })
+  @ApiOkResponse({ description: 'Cultura atualizada com sucesso' })
+  @ApiNotFoundResponse({ description: 'Cultura não encontrada' })
   @Patch(':id')
   async update(
     @Param('id') id: string,
@@ -64,6 +89,9 @@ export class CulturaController {
     if (!result) throw new NotFoundException('Cultura não encontrada');
   }
 
+  @ApiOperation({ summary: 'Remover cultura' })
+  @ApiOkResponse({ description: 'Cultura removida com sucesso' })
+  @ApiNotFoundResponse({ description: 'Cultura não encontrada' })
   @Delete(':id')
   async remove(@Param('id') id: string) {
     const result = await this.culturaService.remove(id);

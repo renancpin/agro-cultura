@@ -5,6 +5,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Cultura } from './entities/cultura.entity';
 import { Repository } from 'typeorm';
 import { FazendaService } from '../fazenda/fazenda.service';
+import { FindCulturasDto } from './dto/find-culturas.dto';
+import { PaginatedCulturas } from './dto/paginated-culturas.dto';
 
 @Injectable()
 export class CulturaService {
@@ -30,7 +32,7 @@ export class CulturaService {
     return Number(result?.sum ?? 0);
   }
 
-  async create(createCulturaDto: CreateCulturaDto): Promise<Cultura | null> {
+  async create(createCulturaDto: CreateCulturaDto): Promise<Cultura> {
     const {
       tipoCultura,
       dataColheita,
@@ -50,29 +52,41 @@ export class CulturaService {
       throw new Error('Área agricultável da fazenda não disponível');
     }
 
-    try {
-      const cultura = this.culturaRepository.create({
-        tipoCultura,
-        safraAno,
-        dataPlantio,
-        dataColheita,
-        areaHectares,
-        fazenda,
-      });
-      await this.culturaRepository.save(cultura);
-      return cultura;
-    } catch {
-      return null;
-    }
+    const cultura = this.culturaRepository.create({
+      tipoCultura,
+      safraAno,
+      dataPlantio,
+      dataColheita,
+      areaHectares,
+      fazenda,
+    });
+    await this.culturaRepository.save(cultura);
+
+    return cultura;
   }
 
-  async findAll() {
-    return await this.culturaRepository.find();
+  async findAll(props: FindCulturasDto): Promise<PaginatedCulturas> {
+    const query = props.toQuery();
+    const [culturas, total] = await this.culturaRepository.findAndCount({
+      ...query,
+      relations: ['fazenda'],
+      select: { fazenda: { id: true, nome: true } },
+    });
+
+    const culturasResult = new PaginatedCulturas({
+      data: culturas,
+      page: props.page,
+      results: props.results,
+      totalResults: total,
+    });
+
+    return culturasResult;
   }
 
   async findOne(id: string) {
     const cultura = await this.culturaRepository.findOne({
       where: { id },
+      relations: ['fazenda'],
     });
     return cultura;
   }

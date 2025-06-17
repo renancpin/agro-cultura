@@ -5,6 +5,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Fazenda } from './entities/fazenda.entity';
 import { Repository } from 'typeorm';
 import { ProdutorService } from '../produtor/produtor.service';
+import { FindFazendasDto } from './dto/find-fazendas.dto';
+import { PaginatedFazendas } from './dto/paginated-fazendas.dto';
 
 @Injectable()
 export class FazendaService {
@@ -45,8 +47,21 @@ export class FazendaService {
     return fazenda;
   }
 
-  async findAll() {
-    return await this.fazendaRepository.find({ relations: ['produtor'] });
+  async findAll(props: FindFazendasDto) {
+    const query = props.toQuery();
+    const [fazendas, total] = await this.fazendaRepository.findAndCount({
+      ...query,
+      relations: ['produtor'],
+    });
+
+    const fazendasResult = new PaginatedFazendas({
+      data: fazendas,
+      page: props.page,
+      results: props.results,
+      totalResults: total,
+    });
+
+    return fazendasResult;
   }
 
   async findOne(id: string): Promise<Fazenda | null> {

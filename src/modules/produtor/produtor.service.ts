@@ -6,6 +6,8 @@ import { Produtor } from './entities/produtor.entity';
 import { Repository } from 'typeorm';
 import { validaCpfCnpj } from 'src/shared/validators/cpf-cnpj.validator';
 import { isUUID } from 'class-validator';
+import { FindProdutoresDto } from './dto/find-produtores.dto';
+import { PaginatedProdutores } from './dto/paginated-produtores.dto';
 
 @Injectable()
 export class ProdutorService {
@@ -33,8 +35,18 @@ export class ProdutorService {
     return produtor;
   }
 
-  async findAll() {
-    return await this.produtorRepository.find();
+  async findAll(props: FindProdutoresDto): Promise<PaginatedProdutores> {
+    const query = props.toQuery();
+    const [users, total] = await this.produtorRepository.findAndCount(query);
+
+    const userResult = new PaginatedProdutores({
+      data: users,
+      page: props.page,
+      results: props.results,
+      totalResults: total,
+    });
+
+    return userResult;
   }
 
   async findOne(id: string): Promise<Produtor | null> {
