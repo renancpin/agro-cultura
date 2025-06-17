@@ -9,12 +9,20 @@ import {
   UnprocessableEntityException,
   NotFoundException,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { ProdutorService } from './produtor.service';
 import { CreateProdutorDto } from './dto/create-produtor.dto';
 import { UpdateProdutorDto } from './dto/update-produtor.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiUnprocessableEntityResponse,
+} from '@nestjs/swagger';
+import { FindProdutoresDto } from './dto/find-produtores.dto';
 
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
@@ -22,6 +30,15 @@ import { ApiBearerAuth } from '@nestjs/swagger';
 export class ProdutorController {
   constructor(private readonly produtorService: ProdutorService) {}
 
+  @ApiOperation({
+    summary: 'Criar um Produtor',
+    description: `Valida o CPF/CNPJ informado. Está preparado para o novo formato de CNPJ alfanumérico,
+      conforme [Instrução Normativa nº 2.229](https://normasinternet2.receita.fazenda.gov.br/#/consulta/externa/141102),
+      de 15/10/2024`,
+  })
+  @ApiUnprocessableEntityResponse({
+    description: 'CPF/CNPJ inválido ou já existe',
+  })
   @Post()
   async create(@Body() createProdutorDto: CreateProdutorDto) {
     try {
@@ -34,11 +51,15 @@ export class ProdutorController {
     }
   }
 
+  @ApiOperation({ summary: 'Ver todos os produtores' })
   @Get()
-  findAll() {
-    return this.produtorService.findAll();
+  async findAll(@Query() findProdutoresDto: FindProdutoresDto) {
+    const produtores = await this.produtorService.findAll(findProdutoresDto);
+    return produtores;
   }
 
+  @ApiOperation({ summary: 'Buscar produtor por uuid ou CPF/CNPJ' })
+  @ApiNotFoundResponse({ description: 'Produtor não encontrado' })
   @Get(':id')
   async findOne(@Param('id') id: string) {
     const produtor = await this.produtorService.findOne(id);
@@ -47,6 +68,9 @@ export class ProdutorController {
     return produtor;
   }
 
+  @ApiOperation({ summary: 'Atualizar produtor' })
+  @ApiOkResponse({ description: 'Produtor atualizado com sucesso' })
+  @ApiNotFoundResponse({ description: 'Produtor não encontrado' })
   @Patch(':id')
   async update(
     @Param('id') id: string,
@@ -56,6 +80,9 @@ export class ProdutorController {
     if (!result) throw new NotFoundException('Produtor não encontrado');
   }
 
+  @ApiOperation({ summary: 'Remover produtor' })
+  @ApiOkResponse({ description: 'Produtor removido com sucesso' })
+  @ApiNotFoundResponse({ description: 'Produtor não encontrado' })
   @Delete(':id')
   async remove(@Param('id') id: string) {
     const result = await this.produtorService.remove(id);

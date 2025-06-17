@@ -1,3 +1,5 @@
+import { ApiProperty } from '@nestjs/swagger';
+
 export interface IPaginatedResults<T> {
   data: T[];
   page: number;
@@ -19,13 +21,22 @@ export abstract class PaginatedResults<T = any>
 
     this.data = data;
     this.page = page;
+    this.results = results;
     this.totalPages = totalPages;
     this.totalResults = totalResults;
   }
 
   readonly data: T[];
+
+  @ApiProperty()
   readonly page: number;
+
+  @ApiProperty()
   readonly results: number;
+
+  @ApiProperty()
   readonly totalPages: number;
+
+  @ApiProperty()
   readonly totalResults: number;
 }
