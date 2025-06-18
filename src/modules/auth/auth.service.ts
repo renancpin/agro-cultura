@@ -4,7 +4,7 @@ import * as bcrypt from 'bcrypt';
 import { UserService } from '../user/user.service';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
-import { ILoginResult } from './interfaces/login-result.interface';
+import { LoginResult } from './dto/login-result.dto';
 import { ITokenPayload } from './interfaces/token-payload.interface';
 
 @Injectable()
@@ -14,7 +14,7 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async login(loginData: LoginDto): Promise<ILoginResult | null> {
+  async login(loginData: LoginDto): Promise<LoginResult | null> {
     const user = await this.userService.findByUsername(loginData.username);
     const isAuthorized =
       user && (await bcrypt.compare(loginData.password, user.password));
