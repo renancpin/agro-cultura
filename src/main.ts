@@ -2,9 +2,13 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { setupSwaggerPlugin } from './config/swagger.config';
+import { setupWinstonLogger } from './config/winston.config';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    logger: setupWinstonLogger(),
+  });
+
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
