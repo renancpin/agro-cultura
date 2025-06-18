@@ -11,6 +11,7 @@ import { AppController } from './app.controller';
 import { ProdutorModule } from './modules/produtor/produtor.module';
 import { FazendaModule } from './modules/fazenda/fazenda.module';
 import { CulturaModule } from './modules/cultura/cultura.module';
+import { LoggingInterceptor } from './interceptors/logging-interceptor';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { CulturaModule } from './modules/cultura/cultura.module';
   controllers: [AppController],
   providers: [
     AppService,
+    { provide: APP_INTERCEPTOR, useClass: LoggingInterceptor },
     { provide: APP_INTERCEPTOR, useClass: ClassSerializerInterceptor },
   ],
 })
