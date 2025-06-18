@@ -50,5 +50,7 @@ Bom proveito!
     )
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('openapi', app, documentFactory);
+  SwaggerModule.setup('openapi', app, documentFactory, {
+    customSiteTitle: 'AgroCultura Docs - OpenAPI',
+  });
 }
