@@ -3,6 +3,8 @@ import { UserController } from './user.controller';
 import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { NotFoundException } from '@nestjs/common';
+import { FindUsersDto } from './dto/find-users.dto';
+import { PaginatedUsers } from './dto/paginated-users.dto';
 
 describe('UserController', () => {
   let controller: UserController;
@@ -42,19 +44,32 @@ describe('UserController', () => {
           id: '1',
           username: 'user1',
           name: 'User 1',
+          password: 'hashedpwd',
+          createdAt: new Date(),
+          updatedAt: new Date(),
         },
         {
           id: '2',
           username: 'user2',
           name: 'User 2',
+          password: 'hashedpwd',
+          createdAt: new Date(),
+          updatedAt: new Date(),
         },
       ];
+      const mockQuery = new FindUsersDto();
+      const expected = new PaginatedUsers({
+        data: mockUsers,
+        page: mockQuery.page,
+        results: mockQuery.results,
+        totalResults: 2,
+      });
 
-      mockUserService.findAll.mockResolvedValue(mockUsers);
+      mockUserService.findAll.mockResolvedValue(expected);
 
-      const result = await controller.findAll();
+      const result = await controller.findAll(mockQuery);
 
-      expect(result).toEqual(mockUsers);
+      expect(result).toEqual(expected);
       expect(mockUserService.findAll).toHaveBeenCalled();
     });
   });

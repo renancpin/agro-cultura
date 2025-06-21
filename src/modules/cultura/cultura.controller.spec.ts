@@ -7,6 +7,8 @@ import {
   UnprocessableEntityException,
   NotFoundException,
 } from '@nestjs/common';
+import { FindCulturasDto } from './dto/find-culturas.dto';
+import { PaginatedCulturas } from './dto/paginated-culturas.dto';
 
 describe('CulturaController', () => {
   let controller: CulturaController;
@@ -99,16 +101,37 @@ describe('CulturaController', () => {
           areaHectares: 50,
           fazenda: {
             id: '1',
-            nome: 'Fazenda Teste',
+            nome: 'Fazenda 1',
+            cidade: 'São Paulo',
+            estado: 'SP',
+            areaTotalHectares: 100,
+            areaAgricultavelHectares: 60,
+            areaVegetacaoHectares: 30,
+            produtor: {
+              id: '1',
+              nome: 'Produtor 1',
+              cpfOuCnpj: '123.456.789-09',
+              createdAt: new Date(),
+              updatedAt: new Date(),
+            },
+            produtorId: '1',
           },
+          fazendaId: '1',
         },
       ];
+      const mockQuery = new FindCulturasDto();
+      const expected = new PaginatedCulturas({
+        data: expectedCulturas,
+        page: mockQuery.page,
+        results: mockQuery.results,
+        totalResults: 1,
+      });
 
-      mockCulturaService.findAll.mockResolvedValue(expectedCulturas);
+      mockCulturaService.findAll.mockResolvedValue(expected);
 
-      const result = await controller.findAll();
+      const result = await controller.findAll(mockQuery);
 
-      expect(result).toEqual(expectedCulturas);
+      expect(result).toEqual(expected);
       expect(mockCulturaService.findAll).toHaveBeenCalled();
     });
   });

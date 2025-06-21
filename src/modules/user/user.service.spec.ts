@@ -4,6 +4,8 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { FindUsersDto } from './dto/find-users.dto';
+import { PaginatedUsers } from './dto/paginated-users.dto';
 
 describe('UserService', () => {
   let service: UserService;
@@ -13,6 +15,7 @@ describe('UserService', () => {
     create: jest.fn(),
     save: jest.fn(),
     find: jest.fn(),
+    findAndCount: jest.fn(),
     findOne: jest.fn(),
     update: jest.fn(),
     delete: jest.fn(),
@@ -83,20 +86,33 @@ describe('UserService', () => {
           id: '1',
           name: 'Usuario Teste',
           username: 'usuario123',
+          password: 'hashedPassword',
+          createdAt: new Date(),
+          updatedAt: new Date(),
         },
         {
           id: '2',
           name: 'Usuario Teste2',
           username: 'usuario234',
+          password: 'hashedPassword2',
+          createdAt: new Date(),
+          updatedAt: new Date(),
         },
       ];
+      const mockQuery = new FindUsersDto();
+      const expected = new PaginatedUsers({
+        data: expectedUsers,
+        page: mockQuery.page,
+        results: mockQuery.results,
+        totalResults: 2,
+      });
 
-      mockRepository.find.mockResolvedValue(expectedUsers);
+      mockRepository.findAndCount.mockResolvedValue([expectedUsers, 2]);
 
-      const result = await service.findAll();
+      const result = await service.findAll(mockQuery);
 
-      expect(result).toEqual(expectedUsers);
-      expect(mockRepository.find).toHaveBeenCalled();
+      expect(result).toEqual(expected);
+      expect(mockRepository.findAndCount).toHaveBeenCalled();
     });
   });
 

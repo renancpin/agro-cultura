@@ -5,6 +5,8 @@ import { Fazenda } from './entities/fazenda.entity';
 import { ProdutorService } from '../produtor/produtor.service';
 import { CreateFazendaDto } from './dto/create-fazenda.dto';
 import { UpdateFazendaDto } from './dto/update-fazenda.dto';
+import { FindFazendasDto } from './dto/find-fazendas.dto';
+import { PaginatedFazendas } from './dto/paginated-fazendas.dto';
 
 describe('FazendaService', () => {
   let service: FazendaService;
@@ -13,6 +15,7 @@ describe('FazendaService', () => {
     create: jest.fn(),
     save: jest.fn(),
     find: jest.fn(),
+    findAndCount: jest.fn(),
     findOne: jest.fn(),
     update: jest.fn(),
     delete: jest.fn(),
@@ -134,16 +137,27 @@ describe('FazendaService', () => {
             id: '1',
             nome: 'Produtor 1',
             cpfOuCnpj: '123.456.789-09',
+            createdAt: new Date(),
+            updatedAt: new Date(),
           },
+          produtorId: '1',
         },
       ];
+      const mockQuery = new FindFazendasDto();
+      const expected = new PaginatedFazendas({
+        data: expectedFazendas,
+        page: mockQuery.page,
+        results: mockQuery.results,
+        totalResults: 1,
+      });
 
-      mockRepository.find.mockResolvedValue(expectedFazendas);
+      mockRepository.findAndCount.mockResolvedValue([expectedFazendas, 1]);
 
-      const result = await service.findAll();
+      const result = await service.findAll(mockQuery);
 
-      expect(result).toEqual(expectedFazendas);
-      expect(mockRepository.find).toHaveBeenCalledWith({
+      expect(result).toEqual(expected);
+      expect(mockRepository.findAndCount).toHaveBeenCalledWith({
+        ...mockQuery.toQuery(),
         relations: ['produtor'],
       });
     });
