@@ -7,6 +7,7 @@ import {
   UnprocessableEntityException,
   NotFoundException,
 } from '@nestjs/common';
+import { FindFazendasDto } from './dto/find-fazendas.dto';
 
 describe('FazendaController', () => {
   let controller: FazendaController;
@@ -108,10 +109,11 @@ describe('FazendaController', () => {
           },
         },
       ];
+      const mockQuery = new FindFazendasDto();
 
       mockFazendaService.findAll.mockResolvedValue(expectedFazendas);
 
-      const result = await controller.findAll();
+      const result = await controller.findAll(mockQuery);
 
       expect(result).toEqual(expectedFazendas);
       expect(mockFazendaService.findAll).toHaveBeenCalled();

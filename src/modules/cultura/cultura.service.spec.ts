@@ -5,6 +5,8 @@ import { Cultura } from './entities/cultura.entity';
 import { FazendaService } from '../fazenda/fazenda.service';
 import { CreateCulturaDto } from './dto/create-cultura.dto';
 import { UpdateCulturaDto } from './dto/update-cultura.dto';
+import { FindCulturasDto } from './dto/find-culturas.dto';
+import { PaginatedCulturas } from './dto/paginated-culturas.dto';
 
 describe('CulturaService', () => {
   let service: CulturaService;
@@ -13,18 +15,37 @@ describe('CulturaService', () => {
     create: jest.fn(),
     save: jest.fn(),
     find: jest.fn(),
+    findAndCount: jest.fn(),
     findOne: jest.fn(),
     update: jest.fn(),
     delete: jest.fn(),
     createQueryBuilder: jest.fn(() => ({
       select: jest.fn().mockReturnThis(),
       where: jest.fn().mockReturnThis(),
-      getRawOne: jest.fn(() => ({ sum: '0' })),
+      getRawOne: jest.fn(() => ({ sum: 0 })),
     })),
   };
 
   const mockFazendaService = {
     findOne: jest.fn(),
+  };
+
+  const mockFazenda = {
+    id: '1',
+    nome: 'Fazenda 1',
+    cidade: 'São Paulo',
+    estado: 'SP',
+    areaTotalHectares: 100,
+    areaAgricultavelHectares: 60,
+    areaVegetacaoHectares: 30,
+    produtor: {
+      id: '1',
+      nome: 'Produtor 1',
+      cpfOuCnpj: '123.456.789-09',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    },
+    produtorId: '1',
   };
 
   beforeEach(async () => {
@@ -60,12 +81,6 @@ describe('CulturaService', () => {
         safraAno: 2024,
         areaHectares: 50,
         fazendaId: '1',
-      };
-
-      const mockFazenda = {
-        id: '1',
-        nome: 'Fazenda Teste',
-        areaAgricultavelHectares: 100,
       };
 
       const expectedCultura = {
@@ -115,13 +130,10 @@ describe('CulturaService', () => {
         fazendaId: '1',
       };
 
-      const mockFazenda = {
-        id: '1',
-        nome: 'Fazenda Teste',
+      mockFazendaService.findOne.mockResolvedValue({
+        ...mockFazenda,
         areaAgricultavelHectares: 40,
-      };
-
-      mockFazendaService.findOne.mockResolvedValue(mockFazenda);
+      });
 
       await expect(service.create(createDto)).rejects.toThrow(
         'Área agricultável da fazenda não disponível',
@@ -139,19 +151,24 @@ describe('CulturaService', () => {
           dataPlantio: new Date('2023-10-01'),
           safraAno: 2024,
           areaHectares: 50,
-          fazenda: {
-            id: '1',
-            nome: 'Fazenda Teste',
-          },
+          fazenda: mockFazenda,
+          fazendaId: '1',
         },
       ];
+      const mockQuery = new FindCulturasDto();
+      const expected = new PaginatedCulturas({
+        data: expectedCulturas,
+        page: mockQuery.page,
+        results: mockQuery.results,
+        totalResults: 1,
+      });
 
-      mockRepository.find.mockResolvedValue(expectedCulturas);
+      mockRepository.findAndCount.mockResolvedValue([expectedCulturas, 1]);
 
-      const result = await service.findAll();
+      const result = await service.findAll(mockQuery);
 
-      expect(result).toEqual(expectedCulturas);
-      expect(mockRepository.find).toHaveBeenCalled();
+      expect(result).toEqual(expected);
+      expect(mockRepository.findAndCount).toHaveBeenCalled();
     });
   });
 
@@ -178,6 +195,7 @@ describe('CulturaService', () => {
       expect(result).toEqual(expectedCultura);
       expect(mockRepository.findOne).toHaveBeenCalledWith({
         where: { id },
+        relations: ['fazenda'],
       });
     });
   });
@@ -222,16 +240,13 @@ describe('CulturaService', () => {
         tipoCultura: 'Soja',
         safraAno: 2024,
         areaHectares: 50,
-        fazenda: {
-          id: '1',
-          areaAgricultavelHectares: 100,
-        },
+        fazenda: { ...mockFazenda, areaAgricultavelHectares: 50 },
       };
 
       mockRepository.findOne.mockResolvedValue(existingCultura);
       mockRepository.createQueryBuilder.mockImplementationOnce(() => {
         const mock = mockRepository.createQueryBuilder();
-        mock.getRawOne.mockReturnValue({ sum: '50' });
+        mock.getRawOne.mockReturnValue({ sum: existingCultura.areaHectares });
         return mock;
       });
 

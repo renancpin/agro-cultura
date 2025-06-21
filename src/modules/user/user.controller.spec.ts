@@ -3,6 +3,7 @@ import { UserController } from './user.controller';
 import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { NotFoundException } from '@nestjs/common';
+import { FindUsersDto } from './dto/find-users.dto';
 
 describe('UserController', () => {
   let controller: UserController;
@@ -49,10 +50,11 @@ describe('UserController', () => {
           name: 'User 2',
         },
       ];
+      const mockQuery = new FindUsersDto();
 
       mockUserService.findAll.mockResolvedValue(mockUsers);
 
-      const result = await controller.findAll();
+      const result = await controller.findAll(mockQuery);
 
       expect(result).toEqual(mockUsers);
       expect(mockUserService.findAll).toHaveBeenCalled();

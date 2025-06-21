@@ -7,6 +7,8 @@ import {
   UnprocessableEntityException,
   NotFoundException,
 } from '@nestjs/common';
+import { FindProdutoresDto } from './dto/find-produtores.dto';
+import { PaginatedProdutores } from './dto/paginated-produtores.dto';
 
 describe('ProdutorController', () => {
   let controller: ProdutorController;
@@ -78,15 +80,34 @@ describe('ProdutorController', () => {
   describe('findAll', () => {
     it('should return an array of produtores', async () => {
       const expectedProdutores = [
-        { id: '1', nome: 'Produtor 1', cpfOuCnpj: '123.456.789-09' },
-        { id: '2', nome: 'Produtor 2', cpfOuCnpj: '987.654.321-09' },
+        {
+          id: '1',
+          nome: 'Produtor 1',
+          cpfOuCnpj: '123.456.789-09',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          id: '2',
+          nome: 'Produtor 2',
+          cpfOuCnpj: '987.654.321-09',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
       ];
+      const mockQuery = new FindProdutoresDto();
+      const expected = new PaginatedProdutores({
+        data: expectedProdutores,
+        page: mockQuery.page,
+        results: mockQuery.results,
+        totalResults: 2,
+      });
 
-      mockProdutorService.findAll.mockResolvedValue(expectedProdutores);
+      mockProdutorService.findAll.mockResolvedValue(expected);
 
-      const result = await controller.findAll();
+      const result = await controller.findAll(mockQuery);
 
-      expect(result).toEqual(expectedProdutores);
+      expect(result).toEqual(expected);
       expect(mockProdutorService.findAll).toHaveBeenCalled();
     });
   });

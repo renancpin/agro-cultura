@@ -4,6 +4,8 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { Produtor } from './entities/produtor.entity';
 import { CreateProdutorDto } from './dto/create-produtor.dto';
 import { UpdateProdutorDto } from './dto/update-produtor.dto';
+import { FindProdutoresDto } from './dto/find-produtores.dto';
+import { PaginatedProdutores } from './dto/paginated-produtores.dto';
 
 describe('ProdutorService', () => {
   let service: ProdutorService;
@@ -12,6 +14,7 @@ describe('ProdutorService', () => {
     create: jest.fn(),
     save: jest.fn(),
     find: jest.fn(),
+    findAndCount: jest.fn(),
     findOne: jest.fn(),
     update: jest.fn(),
     delete: jest.fn(),
@@ -91,16 +94,35 @@ describe('ProdutorService', () => {
   describe('findAll', () => {
     it('should return an array of produtores', async () => {
       const expectedProdutores = [
-        { id: '1', nome: 'Produtor 1', cpfOuCnpj: '123.456.789-09' },
-        { id: '2', nome: 'Produtor 2', cpfOuCnpj: '987.654.321-09' },
+        {
+          id: '1',
+          nome: 'Produtor 1',
+          cpfOuCnpj: '123.456.789-09',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          id: '2',
+          nome: 'Produtor 2',
+          cpfOuCnpj: '987.654.321-09',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
       ];
+      const mockQuery = new FindProdutoresDto();
+      const expected = new PaginatedProdutores({
+        data: expectedProdutores,
+        page: mockQuery.page,
+        results: mockQuery.results,
+        totalResults: 2,
+      });
 
-      mockRepository.find.mockResolvedValue(expectedProdutores);
+      mockRepository.findAndCount.mockResolvedValue([expectedProdutores, 2]);
 
-      const result = await service.findAll();
+      const result = await service.findAll(mockQuery);
 
-      expect(result).toEqual(expectedProdutores);
-      expect(mockRepository.find).toHaveBeenCalled();
+      expect(result).toEqual(expected);
+      expect(mockRepository.findAndCount).toHaveBeenCalled();
     });
   });
 
