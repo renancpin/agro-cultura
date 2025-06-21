@@ -7,6 +7,8 @@ import {
   UnprocessableEntityException,
   NotFoundException,
 } from '@nestjs/common';
+import { FindFazendasDto } from './dto/find-fazendas.dto';
+import { PaginatedFazendas } from './dto/paginated-fazendas.dto';
 
 describe('FazendaController', () => {
   let controller: FazendaController;
@@ -105,15 +107,25 @@ describe('FazendaController', () => {
             id: '1',
             nome: 'Produtor 1',
             cpfOuCnpj: '123.456.789-09',
+            createdAt: new Date(),
+            updatedAt: new Date(),
           },
+          produtorId: '1',
         },
       ];
+      const mockQuery = new FindFazendasDto();
+      const expected = new PaginatedFazendas({
+        data: expectedFazendas,
+        page: mockQuery.page,
+        results: mockQuery.results,
+        totalResults: 1,
+      });
 
-      mockFazendaService.findAll.mockResolvedValue(expectedFazendas);
+      mockFazendaService.findAll.mockResolvedValue(expected);
 
-      const result = await controller.findAll();
+      const result = await controller.findAll(mockQuery);
 
-      expect(result).toEqual(expectedFazendas);
+      expect(result).toEqual(expected);
       expect(mockFazendaService.findAll).toHaveBeenCalled();
     });
   });
