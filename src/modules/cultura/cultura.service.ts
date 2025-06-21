@@ -102,12 +102,13 @@ export class CulturaService {
       const cultura = await this.findOne(id);
       if (!cultura) return false;
 
+      const areaAntiga = cultura.areaHectares;
       const areaPlantada = await this.getSomaAreaPlantada({
         fazendaId: cultura.fazendaId,
         safraAno: safraAno ?? cultura.safraAno,
       });
       if (
-        areaPlantada + areaHectares >
+        areaPlantada - areaAntiga + areaHectares >
         cultura.fazenda.areaAgricultavelHectares
       ) {
         throw new Error('Área agricultável da fazenda não disponível');
