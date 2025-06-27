@@ -6,6 +6,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { FindUsersDto } from './dto/find-users.dto';
 import { PaginatedUsers } from './dto/paginated-users.dto';
+import { Roles } from './enums/roles.enum';
 
 describe('UserService', () => {
   let service: UserService;
@@ -44,12 +45,14 @@ describe('UserService', () => {
         name: 'Usuario Teste',
         username: 'usuario123',
         password: 'password123',
+        role: Roles.USER,
       };
 
       const expectedUser = {
         id: '1',
         nome: 'Usuario Teste',
         username: 'usuario123',
+        role: Roles.USER,
       };
 
       mockRepository.exists.mockResolvedValue(false);
@@ -69,6 +72,7 @@ describe('UserService', () => {
         name: 'Usuario Teste',
         username: 'usuario123',
         password: 'password123',
+        role: Roles.USER,
       };
 
       mockRepository.exists.mockResolvedValue(true);
@@ -87,6 +91,7 @@ describe('UserService', () => {
           name: 'Usuario Teste',
           username: 'usuario123',
           password: 'hashedPassword',
+          role: Roles.USER,
           createdAt: new Date(),
           updatedAt: new Date(),
         },
@@ -95,6 +100,7 @@ describe('UserService', () => {
           name: 'Usuario Teste2',
           username: 'usuario234',
           password: 'hashedPassword2',
+          role: Roles.USER,
           createdAt: new Date(),
           updatedAt: new Date(),
         },

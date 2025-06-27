@@ -5,6 +5,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { NotFoundException } from '@nestjs/common';
 import { FindUsersDto } from './dto/find-users.dto';
 import { PaginatedUsers } from './dto/paginated-users.dto';
+import { Roles } from './enums/roles.enum';
 
 describe('UserController', () => {
   let controller: UserController;
@@ -45,6 +46,7 @@ describe('UserController', () => {
           username: 'user1',
           name: 'User 1',
           password: 'hashedpwd',
+          role: Roles.USER,
           createdAt: new Date(),
           updatedAt: new Date(),
         },
@@ -53,6 +55,7 @@ describe('UserController', () => {
           username: 'user2',
           name: 'User 2',
           password: 'hashedpwd',
+          role: Roles.USER,
           createdAt: new Date(),
           updatedAt: new Date(),
         },
