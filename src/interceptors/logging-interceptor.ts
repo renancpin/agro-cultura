@@ -43,7 +43,7 @@ export class LoggingInterceptor implements NestInterceptor {
           {
             requestId,
             responseTime: `${responseTime}ms`,
-            response: response,
+            response: requestBodyIsUnsafe ? '[REDACTED]' : response,
           },
           'Response',
         );
