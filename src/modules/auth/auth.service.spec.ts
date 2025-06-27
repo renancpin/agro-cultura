@@ -6,6 +6,7 @@ import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { UnauthorizedException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
+import { Roles } from '../user/enums/roles.enum';
 
 jest.mock('bcrypt', () => ({
   compare: jest.fn(),
@@ -145,6 +146,7 @@ describe('AuthService', () => {
         id: '1',
         ...registerDto,
         password: 'hashedPassword',
+        role: Roles.USER,
       };
 
       mockUserService.create.mockResolvedValue(mockUser);
@@ -152,7 +154,10 @@ describe('AuthService', () => {
       const result = await service.register(registerDto);
 
       expect(result).toEqual(mockUser);
-      expect(mockUserService.create).toHaveBeenCalledWith(registerDto);
+      expect(mockUserService.create).toHaveBeenCalledWith({
+        ...registerDto,
+        role: Roles.USER,
+      });
     });
 
     it('should throw UnauthorizedException when username already exists', async () => {
@@ -169,7 +174,10 @@ describe('AuthService', () => {
       await expect(service.register(registerDto)).rejects.toThrow(
         UnauthorizedException,
       );
-      expect(mockUserService.create).toHaveBeenCalledWith(registerDto);
+      expect(mockUserService.create).toHaveBeenCalledWith({
+        ...registerDto,
+        role: Roles.USER,
+      });
     });
   });
 });
