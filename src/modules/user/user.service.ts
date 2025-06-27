@@ -57,7 +57,6 @@ export class UserService {
   async findByUsername(username: string): Promise<User | null> {
     const user = await this.usersRepository.findOne({
       where: { username: username },
-      select: ['id', 'username', 'password', 'name'],
     });
 
     return user;

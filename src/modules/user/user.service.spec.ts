@@ -139,7 +139,6 @@ describe('UserService', () => {
       expect(result).toEqual(expectedUser);
       expect(mockRepository.findOne).toHaveBeenCalledWith({
         where: { username: username },
-        select: ['id', 'username', 'password', 'name'],
       });
     });
   });
