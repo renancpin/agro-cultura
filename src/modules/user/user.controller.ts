@@ -8,19 +8,29 @@ import {
   NotFoundException,
   UseGuards,
   Query,
+  Post,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { ApiBearerAuth, ApiExcludeController } from '@nestjs/swagger';
+import { ApiBearerAuth } from '@nestjs/swagger';
 import { FindUsersDto } from './dto/find-users.dto';
+import { CreateUserDto } from './dto/create-user.dto';
+import { RequiredRoles } from '../auth/decorators/metadata/required-role.decorator';
+import { Roles } from './enums/roles.enum';
 
-@ApiExcludeController()
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
+@RequiredRoles([Roles.ADMIN])
 @Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
+
+  @Post()
+  async create(@Body() createUserDto: CreateUserDto) {
+    const user = await this.userService.create(createUserDto);
+    return user;
+  }
 
   @Get()
   async findAll(@Query() findUsersDto: FindUsersDto) {
