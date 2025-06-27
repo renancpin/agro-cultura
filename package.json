@@ -21,10 +21,9 @@
     "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli -d ./src/config/typeorm.config.ts",
     "typeorm:migrate": "yarn typeorm migration:run",
     "typeorm:migrate:prod": "npx typeorm -d ./dist/config/typeorm.config.js migration:run",
-    "docker:up": "docker compose up",
-    "docker:down": "docker compose down",
-    "docker:up:dev": "docker compose -f docker-compose.yml -f compose-dev.yml watch",
-    "docker:down:dev": "docker compose -f docker-compose.yml -f compose-dev.yml down"
+    "compose:up": "docker compose up",
+    "compose:down": "docker compose down",
+    "compose:up:dev": "docker compose -f docker-compose.yml -f compose-dev.yml watch"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
@@ -35,6 +34,7 @@
     "@nestjs/passport": "^11.0.5",
     "@nestjs/platform-express": "^11.0.1",
     "@nestjs/swagger": "^11.2.0",
+    "@nestjs/terminus": "^11.0.0",
     "@nestjs/typeorm": "^11.0.0",
     "bcrypt": "^6.0.0",
     "class-transformer": "^0.5.1",

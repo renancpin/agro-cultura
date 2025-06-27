@@ -6,11 +6,11 @@ import { validate } from './config/env.validation';
 import { AuthModule } from './modules/auth/auth.module';
 import { UserModule } from './modules/user/user.module';
 import { APP_INTERCEPTOR } from '@nestjs/core';
-import { AppService } from './app.service';
 import { AppController } from './app.controller';
 import { ProdutorModule } from './modules/produtor/produtor.module';
 import { FazendaModule } from './modules/fazenda/fazenda.module';
 import { CulturaModule } from './modules/cultura/cultura.module';
+import { HealthModule } from './modules/health/health.module';
 import { LoggingInterceptor } from './interceptors/logging-interceptor';
 
 @Module({
@@ -30,10 +30,10 @@ import { LoggingInterceptor } from './interceptors/logging-interceptor';
     ProdutorModule,
     FazendaModule,
     CulturaModule,
+    HealthModule,
   ],
   controllers: [AppController],
   providers: [
-    AppService,
     { provide: APP_INTERCEPTOR, useClass: LoggingInterceptor },
     { provide: APP_INTERCEPTOR, useClass: ClassSerializerInterceptor },
   ],
