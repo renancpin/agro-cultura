@@ -6,6 +6,7 @@ import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { LoginResult } from './dto/login-result.dto';
 import { ITokenPayload } from './interfaces/token-payload.interface';
+import { Roles } from '../user/enums/roles.enum';
 
 @Injectable()
 export class AuthService {
@@ -26,6 +27,7 @@ export class AuthService {
     const payload: ITokenPayload = {
       sub: user.id,
       username: user.username,
+      role: user.role,
       name: user.name,
     };
 
@@ -35,7 +37,10 @@ export class AuthService {
   }
 
   async register(userData: RegisterDto) {
-    const user = await this.userService.create(userData);
+    const user = await this.userService.create({
+      ...userData,
+      role: Roles.USER,
+    });
 
     return user;
   }
