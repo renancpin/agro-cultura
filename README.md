@@ -71,34 +71,25 @@ A aplicação estará disponível em `http://localhost:3000` (ou na porta especi
 Para rodar a aplicação em Docker, execute:
 
 ```bash
-yarn docker:up
+yarn compose:up
 
 # Se desejar repetir o processo forçando o build:
-yarn docker:up --build
+yarn compose:up --build
 ```
 
 Se desejar remover os containers e imagens:
 
 ```bash
-yarn docker:down
+yarn compose:down
 ```
 
 ### Desenvolvendo em container
 
-É possível utilizar-se das ferramentas mais atuais de desenvolvimento,
-e executar a aplicação diretamente em container, atualizando-se a cada edição no código-fonte
-
-Para isso, use o script abaixo
+É possível executar a aplicação em modo _watch_ (_dev_) e desenvolver diretamente no container, atualizando-se com cada alteração no código-fonte
 
 ```bash
 # Iniciar containers em modo "watch"
-yarn docker:up:dev
-
-# Se já existir uma imagem anterior, use a flag --build
-yarn docker:up:dev --build
-
-# Parar e remover os containers
-yarn docker:down:dev
+yarn compose:up:dev
 ```
 
 ## Documentação da API
